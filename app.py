@@ -30,13 +30,13 @@ def webhook():
     return resp
 
 def get_ai_response(user_message):
-    url = "https://api.deepseek.com/v1/chat/completions"
+    url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": "Bearer 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",  # ← Remplace ici par ta clé !
+        "Authorization": "Bearer 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",  # ← Mets ta clé OpenRouter
         "Content-Type": "application/json"
     }
     data = {
-        "model": "deepseek-chat",
+        "model": "deepseek/deepseek-chat",  # Modèle Deepseek sur OpenRouter
         "messages": [
             {"role": "user", "content": user_message}
         ],
@@ -48,7 +48,7 @@ def get_ai_response(user_message):
         if r.status_code == 200:
             return r.json()['choices'][0]['message']['content']
         else:
-            print(f"Erreur Deepseek: {r.status_code}, {r.text}")
+            print(f"Erreur OpenRouter: {r.status_code}, {r.text}")
             return None
     except Exception as e:
         print(f"Erreur de connexion: {e}")
