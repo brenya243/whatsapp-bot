@@ -32,11 +32,13 @@ def webhook():
 def get_ai_response(user_message):
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": "Bearer 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",  # ← Mets ta clé OpenRouter
-        "Content-Type": "application/json"
+        "Authorization": "Bearer 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",  # ← Mets ta clé OpenRouter ici
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost:5000",  # Optionnel : ton URL (ou celle de Render)
+        "X-Title": "WhatsApp Bot"  # Optionnel : nom de ton projet
     }
     data = {
-        "model": "deepseek/deepseek-chat",  # Modèle Deepseek sur OpenRouter
+        "model": "qwen/qwen3-235b-a22b:free",
         "messages": [
             {"role": "user", "content": user_message}
         ],
