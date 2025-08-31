@@ -29,32 +29,28 @@ def webhook():
     resp.mimetype = "text/xml"
     return resp
 
-def get_ai_response(user_message):
-    url = "https://openrouter.ai/api/v1/chat/completions"
-    headers = {
-        "Authorization": "Bearer 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",  # ← Mets ta clé OpenRouter ici
-        "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:5000",  # Optionnel : ton URL (ou celle de Render)
-        "X-Title": "WhatsApp Bot"  # Optionnel : nom de ton projet
+from openai import OpenAI
+
+client = OpenAI(
+  base_url="https://openrouter.ai/api/v1",
+  api_key="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",
+)
+
+completion = client.chat.completions.create(
+  extra_headers={
+    "HTTP-Referer": "<YOUR_SITE_URL>", # Optional. Site URL for rankings on openrouter.ai.
+    "X-Title": "<YOUR_SITE_NAME>", # Optional. Site title for rankings on openrouter.ai.
+  },
+  extra_body={},
+  model="openai/gpt-oss-120b:free",
+  messages=[
+    {
+      "role": "user",
+      "content": "What is the meaning of life?"
     }
-    data = {
-        "model": "qwen/qwen3-235b-a22b:free",
-        "messages": [
-            {"role": "user", "content": user_message}
-        ],
-        "max_tokens": 300,
-        "temperature": 0.7
-    }
-    try:
-        r = requests.post(url, json=data, headers=headers)
-        if r.status_code == 200:
-            return r.json()['choices'][0]['message']['content']
-        else:
-            print(f"Erreur OpenRouter: {r.status_code}, {r.text}")
-            return None
-    except Exception as e:
-        print(f"Erreur de connexion: {e}")
-        return None
+  ]
+)
+print(completion.choices[0].message.content)
 
 if __name__ == '__main__':
     import os
