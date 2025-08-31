@@ -29,28 +29,28 @@ def webhook():
     resp.mimetype = "text/xml"
     return resp
 
-from openai import OpenAI
+import requests
+import json
 
-client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key="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",
-)
-
-completion = client.chat.completions.create(
-  extra_headers={
+response = requests.post(
+  url="https://openrouter.ai/api/v1/chat/completions",
+  headers={
+    "Authorization": "Bearer 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",
+    "Content-Type": "application/json",
     "HTTP-Referer": "<YOUR_SITE_URL>", # Optional. Site URL for rankings on openrouter.ai.
     "X-Title": "<YOUR_SITE_NAME>", # Optional. Site title for rankings on openrouter.ai.
   },
-  extra_body={},
-  model="openai/gpt-oss-120b:free",
-  messages=[
-    {
-      "role": "user",
-      "content": "What is the meaning of life?"
-    }
-  ]
+  data=json.dumps({
+    "model": "openai/gpt-oss-120b:free",
+    "messages": [
+      {
+        "role": "user",
+        "content": "What is the meaning of life?"
+      }
+    ],
+    
+  })
 )
-print(completion.choices[0].message.content)
 
 if __name__ == '__main__':
     import os
